@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>زاد القلوب | مسابقات دينية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Reem+Kufi:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ============ المتغيرات والأساسيات ============ */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --gold:#d4af37;
+  --gold-2:#f7e7a3;
+  --gold-3:#a8842a;
+  --emerald:#0d5c46;
+  --emerald-2:#0a3d31;
+  --emerald-3:#062019;
+  --bg:#04120e;
+  --card:rgba(255,255,255,.055);
+  --card-brd:rgba(212,175,55,.28);
+  --txt:#eef6f2;
+  --muted:#9fb8af;
+  --ok:#22c55e;
+  --bad:#ef4444;
+  --warn:#f59e0b;
+  --shadow:0 18px 50px rgba(0,0,0,.55);
+  --r:22px;
+}
+html,body{height:100%}
+body{
+  font-family:'Cairo',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  overflow-x:hidden;
+  min-height:100vh;
+  position:relative;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-3;
+  background:
+    radial-gradient(1100px 700px at 85% -10%,rgba(13,92,70,.55),transparent 60%),
+    radial-gradient(900px 600px at 5% 105%,rgba(212,175,55,.14),transparent 60%),
+    linear-gradient(160deg,#04120e 0%,#062019 45%,#04120e 100%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-2;opacity:.055;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23d4af37' stroke-width='1.1'%3E%3Cpath d='M60 0l60 60-60 60L0 60z'/%3E%3Cpath d='M60 22l38 38-38 38-38-38z'/%3E%3Ccircle cx='60' cy='60' r='16'/%3E%3Cpath d='M0 0h120v120H0z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:120px 120px;
+  animation:bgScroll 90s linear infinite;
+}
+@keyframes bgScroll{to{background-position:120px 120px}}
+canvas#fx{position:fixed;inset:0;z-index:9;pointer-events:none}
+
+/* ============ الشريط العلوي ============ */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:14px;padding:12px 18px;
+  backdrop-filter:blur(16px);
+  background:rgba(4,18,14,.72);
+  border-bottom:1px solid rgba(212,175,55,.18);
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand .logo{
+  width:48px;height:48px;border-radius:14px;
+  display:grid;place-items:center;
+  background:linear-gradient(145deg,#0d5c46,#062019);
+  border:1.5px solid var(--gold);
+  box-shadow:0 0 22px rgba(212,175,55,.35),inset 0 0 16px rgba(212,175,55,.12);
+  font-size:24px;
+  animation:floaty 4s ease-in-out infinite;
+}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.brand h1{font-family:'Reem Kufi',sans-serif;font-size:20px;line-height:1.1;letter-spacing:.3px}
+.brand h1 span{
+  background:linear-gradient(90deg,var(--gold-2),var(--gold),var(--gold-3));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.brand small{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+.tools{display:flex;gap:8px}
+.icon-btn{
+  width:42px;height:42px;border-radius:12px;cursor:pointer;
+  background:var(--card);border:1px solid var(--card-brd);
+  color:var(--gold-2);font-size:18px;display:grid;place-items:center;
+  transition:.25s;backdrop-filter:blur(8px);
+}
+.icon-btn:hover{background:rgba(212,175,55,.16);transform:translateY(-2px)}
+.icon-btn.off{opacity:.4}
+
+/* ============ الحاويات ============ */
+.wrap{max-width:1050px;margin:0 auto;padding:26px 16px 90px}
+.screen{display:none;animation:fadeUp .5s cubic-bezier(.2,.8,.2,1)}
+.screen.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* ============ الهيرو ============ */
+.hero{
+  text-align:center;padding:40px 22px 34px;
+  border-radius:30px;position:relative;overflow:hidden;
+  background:linear-gradient(150deg,rgba(13,92,70,.35),rgba(6,32,25,.55));
+  border:1px solid var(--card-brd);
+  box-shadow:var(--shadow);
+}
+.hero::before{
+  content:"";position:absolute;inset:-50%;
+  background:conic-gradient(from 0deg,transparent,rgba(212,175,55,.16),transparent 30%);
+  animation:spin 9s linear infinite;pointer-events:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero>*{position:relative;z-index:1}
+.hero .crest{
+  width:96px;height:96px;margin:0 auto 16px;border-radius:28px;
+  display:grid;place-items:center;font-size:46px;
+  background:linear-gradient(145deg,#0f7057,#062019);
+  border:2px solid var(--gold);
+  box-shadow:0 0 40px rgba(212,175,55,.4),inset 0 0 26px rgba(212,175,55,.18);
+  animation:floaty 5s ease-in-out infinite;
+}
+.hero h2{
+  font-family:'Reem Kufi',sans-serif;font-size:clamp(28px,6vw,46px);
+  background:linear-gradient(90deg,var(--gold-2),var(--gold),#fff6d0,var(--gold));
+  background-size:220% auto;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:shine 4.5s linear infinite;
+}
+@keyframes shine{to{background-position:220% center}}
+.hero p.sub{color:var(--muted);margin-top:10px;font-size:15px;font-weight:600}
+.hero .badge{
+  display:inline-flex;align-items:center;gap:8px;margin-top:16px;
+  padding:8px 18px;border-radius:999px;font-size:13px;font-weight:700;
+  background:rgba(212,175,55,.12);border:1px solid var(--card-brd);color:var(--gold-2);
+}
+.stats-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:12px;margin-top:24px;
+}
+.stat{
+  background:rgba(0,0,0,.28);border:1px solid rgba(212,175,55,.2);
+  border-radius:16px;padding:14px 10px;text-align:center;
+}
+.stat b{display:block;font-size:24px;color:var(--gold-2);font-family:'Reem Kufi',sans-serif}
+.stat span{font-size:12px;color:var(--muted);font-weight:600}
+
+/* ============ العناوين ============ */
+.sec-title{
+  display:flex;align-items:center;gap:12px;
+  margin:34px 0 18px;font-family:'Reem Kufi',sans-serif;font-size:22px;
+}
+.sec-title::before{content:"";width:5px;height:26px;border-radius:4px;
+  background:linear-gradient(180deg,var(--gold),var(--gold-3))}
+.sec-title small{margin-inline-start:auto;font-family:'Cairo';font-size:12px;color:var(--muted);font-weight:600}
+
+/* ============ كروت المستويات ============ */
+.levels{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:18px}
+.lvl{
+  position:relative;border-radius:var(--r);padding:22px;cursor:pointer;
+  background:linear-gradient(150deg,rgba(255,255,255,.06),rgba(0,0,0,.28));
+  border:1px solid var(--card-brd);
+  transition:.35s cubic-bezier(.2,.8,.2,1);overflow:hidden;
+}
+.lvl::after{
+  content:"";position:absolute;inset:0;opacity:0;transition:.35s;
+  background:radial-gradient(400px 200px at 50% 0%,var(--acc,#22c55e33),transparent 70%);
+}
+.lvl:hover{transform:translateY(-8px);border-color:var(--acc,#d4af37);box-shadow:0 22px 46px rgba(0,0,0,.55)}
+.lvl:hover::after{opacity:1}
+.lvl>*{position:relative;z-index:1}
+.lvl .ico{
+  width:60px;height:60px;border-radius:18px;display:grid;place-items:center;
+  font-size:30px;margin-bottom:14px;
+  background:rgba(0,0,0,.35);border:1.5px solid var(--acc,#d4af37);
+  box-shadow:0 0 24px -6px var(--acc,#d4af37);
+}
+.lvl h3{font-family:'Reem Kufi',sans-serif;font-size:19px;margin-bottom:6px}
+.lvl .dsc{font-size:13px;color:var(--muted);line-height:1.7;font-weight:600;min-height:44px}
+.lvl .meta{
+  display:flex;align-items:center;gap:10px;margin-top:14px;
+  font-size:12px;color:var(--muted);font-weight:700;
+}
+.lvl .bar{height:7px;border-radius:99px;background:rgba(0,0,0,.45);overflow:hidden;margin-top:12px}
+.lvl .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--acc),var(--gold));transition:width .8s}
+.lvl.locked{filter:grayscale(.85);opacity:.55;cursor:not-allowed}
+.lvl.locked:hover{transform:none;box-shadow:none}
+.lock-tag{
+  position:absolute;top:14px;inset-inline-start:14px;z-index:2;
+  background:rgba(0,0,0,.65);border:1px solid rgba(255,255,255,.15);
+  padding:5px 11px;border-radius:99px;font-size:11px;font-weight:700;
+}
+.done-tag{
+  position:absolute;top:14px;inset-inline-start:14px;z-index:2;
+  background:linear-gradient(90deg,var(--gold),var(--gold-3));color:#1a1206;
+  padding:5px 11px;border-radius:99px;font-size:11px;font-weight:800;
+}
+
+/* ============ الأزرار ============ */
+.btn{
+  border:none;cursor:pointer;font-family:'Cairo';font-weight:800;
+  border-radius:14px;padding:13px 26px;font-size:15px;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  transition:.25s;position:relative;overflow:hidden;
+}
+.btn-gold{
+  background:linear-gradient(135deg,var(--gold-2),var(--gold),var(--gold-3));
+  color:#1a1206;box-shadow:0 10px 28px -8px rgba(212,175,55,.75);
+}
+.btn-gold:hover{transform:translateY(-3px);box-shadow:0 16px 34px -8px rgba(212,175,55,.9)}
+.btn-ghost{
+  background:var(--card);color:var(--gold-2);border:1px solid var(--card-brd);
+}
+.btn-ghost:hover{background:rgba(212,175,55,.14);transform:translateY(-2px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
+.btn-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}
+
+/* ============ المسابقة ============ */
+.quiz-head{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:16px 20px;border-radius:18px;margin-bottom:16px;
+  background:var(--card);border:1px solid var(--card-brd);
+}
+.quiz-head .lvl-name{font-family:'Reem Kufi';font-size:17px;color:var(--gold-2)}
+.chip{
+  padding:6px 14px;border-radius:99px;font-size:12.5px;font-weight:800;
+  background:rgba(0,0,0,.35);border:1px solid rgba(212,175,55,.25);
+}
+.chip.score{color:var(--gold-2)}
+.timer-wrap{width:100%;height:9px;border-radius:99px;background:rgba(0,0,0,.5);overflow:hidden;margin-bottom:20px}
+.timer-bar{height:100%;width:100%;border-radius:99px;background:linear-gradient(90deg,#22c55e,#d4af37);transition:width .95s linear,background .3s}
+.timer-bar.warn{background:linear-gradient(90deg,#f59e0b,#ef4444)}
+.timer-bar.danger{background:linear-gradient(90deg,#ef4444,#7f1d1d);animation:pulseBar .55s infinite}
+@keyframes pulseBar{50%{opacity:.5}}
+
+.q-card{
+  border-radius:var(--r);padding:26px 22px;
+  background:linear-gradient(150deg,rgba(13,92,70,.3),rgba(0,0,0,.32));
+  border:1px solid var(--card-brd);box-shadow:var(--shadow);
+  animation:fadeUp .45s;
+}
+.q-num{font-size:12.5px;color:var(--gold);font-weight:800;letter-spacing:.5px;margin-bottom:10px}
+.q-text{
+  font-family:'Reem Kufi',sans-serif;font-size:clamp(19px,3.4vw,26px);
+  line-height:1.75;margin-bottom:22px;
+}
+.opts{display:grid;gap:12px}
+.opt{
+  display:flex;align-items:center;gap:14px;cursor:pointer;
+  padding:15px 18px;border-radius:16px;font-size:15.5px;font-weight:700;
+  background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);
+  transition:.25s;text-align:right;color:var(--txt);font-family:'Cairo';
+}
+.opt:hover:not(.dis){background:rgba(212,175,55,.13);border-color:var(--gold);transform:translateX(-6px)}
+.opt .key{
+  width:34px;height:34px;flex:0 0 34px;border-radius:11px;display:grid;place-items:center;
+  background:rgba(0,0,0,.42);border:1px solid rgba(212,175,55,.3);
+  font-family:'Reem Kufi';font-size:15px;color:var(--gold-2);
+}
+.opt.correct{background:rgba(34,197,94,.2);border-color:var(--ok);animation:pop .45s}
+.opt.correct .key{background:var(--ok);color:#fff;border-color:var(--ok)}
+.opt.wrong{background:rgba(239,68,68,.18);border-color:var(--bad);animation:shake .45s}
+.opt.wrong .key{background:var(--bad);color:#fff;border-color:var(--bad)}
+.opt.dis{cursor:default}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.035)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+
+.feedback{
+  margin-top:18px;padding:16px 18px;border-radius:16px;font-size:14px;line-height:1.9;
+  display:none;animation:fadeUp .4s;font-weight:600;
+}
+.feedback.show{display:block}
+.feedback.good{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.4)}
+.feedback.bad{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.4)}
+.feedback b{color:var(--gold-2)}
+
+/* ============ النتيجة ============ */
+.result-card{
+  text-align:center;padding:38px 24px;border-radius:30px;
+  background:linear-gradient(150deg,rgba(13,92,70,.35),rgba(0,0,0,.35));
+  border:1px solid var(--card-brd);box-shadow:var(--shadow);
+}
+.medal{
+  width:130px;height:130px;margin:0 auto 18px;border-radius:50%;
+  display:grid;place-items:center;font-size:64px;
+  background:radial-gradient(circle at 35% 30%,#0f7057,#04120e);
+  border:3px solid var(--gold);
+  box-shadow:0 0 60px rgba(212,175,55,.5),inset 0 0 40px rgba(212,175,55,.2);
+  animation:floaty 3.6s ease-in-out infinite;
+}
+.result-card h2{font-family:'Reem Kufi';font-size:30px;color:var(--gold-2);margin-bottom:8px}
+.result-card .grade{font-size:17px;color:var(--muted);font-weight:700;margin-bottom:22px}
+.ring-wrap{display:flex;justify-content:center;margin:8px 0 22px}
+.ring{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:13;stroke-linecap:round}
+.ring .bgc{stroke:rgba(255,255,255,.09)}
+.ring .fgc{stroke:url(#gradRing);stroke-dasharray:377;stroke-dashoffset:377;transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)}
+.ring-txt{
+  position:absolute;inset:0;display:grid;place-items:center;text-align:center;
+}
+.ring-holder{position:relative;width:150px;height:150px}
+.ring-txt b{font-family:'Reem Kufi';font-size:36px;color:var(--gold-2);display:block;line-height:1}
+.ring-txt span{font-size:12px;color:var(--muted);font-weight:700}
+.res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-top:8px}
+.res-grid .stat b{font-size:22px}
+.stars{font-size:30px;letter-spacing:6px;margin-bottom:12px;filter:drop-shadow(0 0 12px rgba(212,175,55,.6))}
+
+/* ============ لوحة الصدارة ============ */
+.board-list{display:grid;gap:10px}
+.b-row{
+  display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:16px;
+  background:var(--card);border:1px solid rgba(255,255,255,.08);font-weight:700;
+  animation:fadeUp .4s backwards;
+}
+.b-row .rank{
+  width:38px;height:38px;flex:0 0 38px;border-radius:12px;display:grid;place-items:center;
+  font-family:'Reem Kufi';background:rgba(0,0,0,.4);border:1px solid rgba(212,175,55,.25);
+}
+.b-row.g1 .rank{background:linear-gradient(135deg,#f7e7a3,#d4af37);color:#1a1206;border-color:#f7e7a3}
+.b-row.g2 .rank{background:linear-gradient(135deg,#e2e8f0,#94a3b8);color:#0f172a;border-color:#cbd5e1}
+.b-row.g3 .rank{background:linear-gradient(135deg,#f0b27a,#b45309);color:#fff;border-color:#f0b27a}
+.b-row .nm{flex:1;font-size:15px}
+.b-row .sc{color:var(--gold-2);font-family:'Reem Kufi';font-size:16px}
+.b-row .dt{font-size:11px;color:var(--muted);font-weight:600}
+.empty{
+  text-align:center;padding:50px 20px;color:var(--muted);font-weight:700;
+  border:2px dashed rgba(212,175,55,.25);border-radius:var(--r);
+}
+
+/* ============ النافذة المنبثقة ============ */
+.modal{
+  position:fixed;inset:0;z-index:60;display:none;
+  align-items:center;justify-content:center;padding:20px;
+  background:rgba(0,0,0,.75);backdrop-filter:blur(8px);
+}
+.modal.show{display:flex;animation:fadeUp .3s}
+.modal-box{
+  width:100%;max-width:430px;border-radius:26px;padding:30px 24px;text-align:center;
+  background:linear-gradient(150deg,#0b4a38,#04120e);
+  border:1px solid var(--card-brd);box-shadow:var(--shadow);
+}
+.modal-box h3{font-family:'Reem Kufi';font-size:23px;color:var(--gold-2);margin-bottom:8px}
+.modal-box p{font-size:13.5px;color:var(--muted);font-weight:600;margin-bottom:20px;line-height:1.8}
+.inp{
+  width:100%;padding:15px 18px;border-radius:14px;font-family:'Cairo';font-size:15px;font-weight:700;
+  background:rgba(0,0,0,.4);border:1.5px solid rgba(212,175,55,.3);color:var(--txt);
+  outline:none;text-align:center;transition:.25s;
+}
+.inp:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(212,175,55,.14)}
+
+/* ============ الشهادة ============ */
+.cert{
+  background:linear-gradient(150deg,#0b4a38,#062019);
+  border:3px double var(--gold);border-radius:24px;
+  padding:44px 30px;text-align:center;position:relative;overflow:hidden;
+  margin-top:16px;
+}
+.cert::before{
+  content:"";position:absolute;inset:12px;border:1px solid rgba(212,175,55,.35);border-radius:16px;pointer-events:none;
+}
+.cert .c-logo{font-size:52px;margin-bottom:10px}
+.cert h3{font-family:'Reem Kufi';font-size:27px;color:var(--gold-2);margin-bottom:6px}
+.cert .c-sub{color:var(--muted);font-size:13px;font-weight:700;margin-bottom:24px}
+.cert .c-name{
+  font-family:'Reem Kufi';font-size:32px;color:#fff;margin:14px 0;
+  padding-bottom:10px;border-bottom:2px dashed rgba(212,175,55,.4);display:inline-block;min-width:60%;
+}
+.cert .c-line{font-size:15px;font-weight:700;color:var(--muted);margin:8px 0}
+.cert .c-line b{color:var(--gold-2);font-family:'Reem Kufi';font-size:19px}
+.cert .c-foot{
+  display:flex;justify-content:space-between;gap:16px;margin-top:34px;
+  font-size:12.5px;font-weight:700;color:var(--muted);
+}
+.cert .c-foot div{flex:1}
+.cert .c-foot span{display:block;border-top:1px solid rgba(212,175,55,.4);margin-top:36px;padding-top:8px}
+
+/* ============ التنبيه العائم ============ */
+.toast{
+  position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);
+  z-index:80;padding:14px 26px;border-radius:14px;font-weight:800;font-size:14px;
+  background:linear-gradient(135deg,var(--gold-2),var(--gold));
+  color:#1a1206;box-shadow:0 14px 40px rgba(0,0,0,.5);
+  transition:.45s cubic-bezier(.2,.8,.2,1);pointer-events:none;
+}
+.toast.show{transform:translate(-50%,0)}
+
+/* ============ الفوتر ============ */
+.footer{
+  text-align:center;padding:30px 16px;color:var(--muted);font-size:13px;font-weight:600;
+  border-top:1px solid rgba(212,175,55,.14);margin-top:40px;line-height:2;
+}
+.footer b{color:var(--gold-2)}
+
+/* ============ الاستجابة ============ */
+@media(max-width:620px){
+  .brand h1{font-size:16px}
+  .brand .logo{width:42px;height:42px;font-size:21px}
+  .hero{padding:30px 16px 26px;border-radius:24px}
+  .hero .crest{width:78px;height:78px;font-size:38px}
+  .q-card{padding:20px 16px}
+  .opt{padding:13px 14px;font-size:14.3px}
+  .cert{padding:30px 18px}
+  .cert .c-name{font-size:24px}
+}
+
+/* ============ الطباعة ============ */
+@media print{
+  body{background:#fff!important;color:#111}
+  body::before,body::after{display:none}
+  .topbar,.tools,.btn,.btn-row,.footer,.no-print,canvas#fx,.toast{display:none!important}
+  .wrap{padding:0}
+  .cert{border-color:#a8842a;background:#fff;color:#111}
+  .cert h3,.cert .c-line b{color:#0d5c46}
+  .cert .c-name{color:#111;border-color:#a8842a}
+  .cert::before{border-color:#a8842a}
+}
+</style>
+</head>
+<body>
+
+<canvas id="fx"></canvas>
+
+<!-- ===== الشريط العلوي ===== -->
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">🕌</div>
+    <div>
+      <h1>زاد <span>القلوب</span></h1>
+      <small>إشراف: أحمد جعفر</small>
+    </div>
+  </div>
+  <div class="tools">
+    <button class="icon-btn" id="soundBtn" title="الصوت">🔊</button>
+    <button class="icon-btn" id="boardBtn" title="لوحة الصدارة">🏆</button>
+    <button class="icon-btn" id="homeBtn" title="الرئيسية">🏠</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ===== الرئيسية ===== -->
+  <section class="screen active" id="screen-home">
+    <div class="hero">
+      <div class="crest">☪️</div>
+      <h2>مسابقات زاد القلوب</h2>
+      <p class="sub">اختبر علمك… وارتقِ في مستويات الزاد الخمسة</p>
+      <div class="badge">✨ ٥٠ سؤالًا موثوقًا · ٥ مستويات · شهادة معتمدة</div>
+      <div class="stats-row">
+        <div class="stat"><b id="stTotal">0</b><span>إجمالي النقاط</span></div>
+        <div class="stat"><b id="stLevels">0/5</b><span>مستويات مكتملة</span></div>
+        <div class="stat"><b id="stBest">0%</b><span>أفضل نسبة</span></div>
+        <div class="stat"><b id="stRank">—</b><span>تقديرك</span></div>
+      </div>
+    </div>
+
+    <div class="sec-title">المستويات <small>أكمل ٦٠٪ لفتح المستوى التالي</small></div>
+    <div class="levels" id="levelsGrid"></div>
+
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="toBoard">🏆 لوحة الصدارة</button>
+      <button class="btn btn-ghost" id="dlData">⬇️ تحميل إنجازاتي</button>
+      <button class="btn btn-ghost" id="resetBtn">♻️ تصفير التقدم</button>
+    </div>
+  </section>
+
+  <!-- ===== المسابقة ===== -->
+  <section class="screen" id="screen-quiz">
+    <div class="quiz-head">
+      <span class="lvl-name" id="qLevel">—</span>
+      <span class="chip" id="qCounter">سؤال ١ / ١٠</span>
+      <span class="chip score" id="qScore">٠ نقطة</span>
+      <span class="chip" id="qTimer">⏱ ٣٠</span>
+    </div>
+    <div class="timer-wrap"><div class="timer-bar" id="timerBar"></div></div>
+    <div class="q-card">
+      <div class="q-num" id="qNum">السؤال الأول</div>
+      <div class="q-text" id="qText">—</div>
+      <div class="opts" id="opts"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-gold" id="nextBtn" style="display:none">السؤال التالي ←</button>
+      <button class="btn btn-ghost" id="quitBtn">خروج</button>
+    </div>
+  </section>
+
+  <!-- ===== النتيجة ===== -->
+  <section class="screen" id="screen-result">
+    <div class="result-card">
+      <div class="medal" id="medal">🏅</div>
+      <h2 id="resTitle">أحسنت!</h2>
+      <div class="grade" id="resGrade">—</div>
+      <div class="ring-wrap">
+        <div class="ring-holder">
+          <svg class="ring" width="150" height="150">
+            <defs>
+              <linearGradient id="gradRing" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f7e7a3"/>
+                <stop offset="100%" stop-color="#d4af37"/>
+              </linearGradient>
+            </defs>
+            <circle class="bgc" cx="75" cy="75" r="60"/>
+            <circle class="fgc" id="ringFg" cx="75" cy="75" r="60"/>
+          </svg>
+          <div class="ring-txt"><div><b id="resPct">0%</b><span>النسبة</span></div></div>
+        </div>
+      </div>
+      <div class="stars" id="resStars">☆☆☆</div>
+      <div class="res-grid">
+        <div class="stat"><b id="resCorrect">0</b><span>إجابات صحيحة</span></div>
+        <div class="stat"><b id="resWrong">0</b><span>إجابات خاطئة</span></div>
+        <div class="stat"><b id="resPts">0</b><span>النقاط</span></div>
+        <div class="stat"><b id="resTime">0s</b><span>الزمن</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-gold" id="retryBtn">🔄 إعادة المحاولة</button>
+        <button class="btn btn-ghost" id="certBtn">📜 استخراج الشهادة</button>
+        <button class="btn btn-ghost" id="nextLvlBtn" style="display:none">المستوى التالي ←</button>
+        <button class="btn btn-ghost" id="resHome">🏠 الرئيسية</button>
+      </div>
+    </div>
+
+    <div id="certArea" style="display:none">
+      <div class="cert" id="certCard">
+        <div class="c-logo">☪️</div>
+        <h3>شهادة إتمام مستوى</h3>
+        <div class="c-sub">مجموعة زاد القلوب · إشراف: أحمد جعفر</div>
+        <div class="c-line">تُمنح هذه الشهادة بكل فخر إلى</div>
+        <div class="c-name" id="certName">—</div>
+        <div class="c-line">لإتمامه مستوى <b id="certLevel">—</b></div>
+        <div class="c-line">بنتيجة <b id="certPct">—</b> وتقدير <b id="certGrade">—</b></div>
+        <div class="c-line" style="margin-top:16px">نسأل الله أن يزيدك علمًا وعملًا 🌿</div>
+        <div class="c-foot">
+          <div>التاريخ<span id="certDate">—</span></div>
+          <div>المشرف<span>أحمد جعفر</span></div>
+        </div>
+      </div>
+      <div class="btn-row no-print">
+        <button class="btn btn-gold" id="printCert">🖨️ طباعة / حفظ PDF</button>
+        <button class="btn btn-ghost" id="shareCert">📤 مشاركة</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== لوحة الصدارة ===== -->
+  <section class="screen" id="screen-board">
+    <div class="sec-title">🏆 لوحة الصدارة <small>أعلى النتائج محفوظة على جهازك</small></div>
+    <div class="board-list" id="boardList"></div>
+    <div class="btn-row">
+      <button class="btn btn-ghost" id="boardHome">🏠 الرئيسية</button>
+      <button class="btn btn-ghost" id="clearBoard">🗑️ مسح اللوحة</button>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <b>زاد القلوب</b> · إشراف: <b>أحمد جعفر</b><br>
+  «وَقُل رَّبِّ زِدْنِي عِلْمًا» — صدق الله العظيم
+</footer>
+
+<!-- ===== نافذة الاسم ===== -->
+<div class="modal" id="nameModal">
+  <div class="modal-box">
+    <div style="font-size:44px;margin-bottom:8px">📝</div>
+    <h3>قبل أن نبدأ</h3>
+    <p>اكتب اسمك ليظهر في لوحة الصدارة وعلى الشهادة</p>
+    <input class="inp" id="nameInput" placeholder="اسمك الكريم…" maxlength="24" autocomplete="off">
+    <div class="btn-row" style="margin-top:20px">
+      <button class="btn btn-gold" id="nameOk" style="width:100%">ابدأ الآن ✨</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   زاد القلوب — محرك المسابقات
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+/* ---------- بنك الأسئلة (موثوق من الكتاب والسنة) ---------- */
+const LEVELS = [
+  {
+    id:1, name:"المستوى الأول", title:"زاد المبتدئ", icon:"🌱", color:"#22c55e", time:30,
+    desc:"أساسيات الدين وأوليات القرآن الكريم",
+    qs:[
+      {q:"كم عدد أركان الإسلام؟", o:["ثلاثة","أربعة","خمسة","ستة"], c:2,
+       i:"أركان الإسلام خمسة: الشهادتان، والصلاة، والزكاة، وصوم رمضان، وحج البيت. (متفق عليه)"},
+      {q:"ما أول سورة في المصحف الشريف؟", o:["البقرة","الفاتحة","الناس","الإخلاص"], c:1,
+       i:"سورة الفاتحة هي أول سور المصحف، وتسمى أم الكتاب."},
+      {q:"كم عدد الصلوات المفروضة في اليوم والليلة؟", o:["ثلاث","أربع","خمس","ست"], c:2,
+       i:"خمس صلوات فرضها الله في ليلة الإسراء: الفجر والظهر والعصر والمغرب والعشاء."},
+      {q:"في أي شهر هجري فُرض الصيام؟", o:["شعبان","رمضان","شوال","رجب"], c:1,
+       i:"قال تعالى: «شَهْرُ رَمَضَانَ الَّذِي أُنزِلَ فِيهِ الْقُرْآنُ» — البقرة ١٨٥."},
+      {q:"من هو النبي الذي ابتلعه الحوت؟", o:["يوسف","يونس","أيوب","إلياس"], c:1,
+       i:"قال تعالى: «فَابْتَلَعَهُ الْحُوتُ وَهُوَ مُلِيمٌ» — الصافات ١٤٢، وهو يونس عليه السلام."},
+      {q:"كم عدد أركان الإيمان؟", o:["خمسة","ستة","سبعة","أربعة"], c:1,
+       i:"ستة أركان: الإيمان بالله، وملائكته، وكتبه، ورسله، واليوم الآخر، والقدر خيره وشره. (مسلم)"},
+      {q:"ما أطول سورة في القرآن الكريم؟", o:["آل عمران","النساء","البقرة","الأعراف"], c:2,
+       i:"سورة البقرة، وعدد آياتها ٢٨٦ آية."},
+      {q:"ما أقصر سورة في القرآن الكريم؟", o:["الإخلاص","الكوثر","الفلق","الناس"], c:1,
+       i:"سورة الكوثر، وعدد آياتها ثلاث آيات."},
+      {q:"ما أول ما نزل من القرآن الكريم؟", o:["اقرأ باسم ربك","الحمد لله","يا أيها المدثر","الم"], c:0,
+       i:"أول ما نزل صدر سورة العلق: «اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ». (البخاري)"},
+      {q:"كم عدد أجزاء القرآن الكريم؟", o:["٢٠","٢٥","٣٠","٦٠"], c:2,
+       i:"ثلاثون جزءًا، و١١٤ سورة."}
+    ]
+  },
+  {
+    id:2, name:"المستوى الثاني", title:"زاد الطالب", icon:"📖", color:"#38bdf8", time:28,
+    desc:"السيرة النبوية وأعلام الصحابة رضوان الله عليهم",
+    qs:[
+      {q:"من الصحابي الملقب بـ«سيف الله المسلول»؟", o:["عمر بن الخطاب","خالد بن الوليد","سعد بن أبي وقاص","أبو عبيدة"], c:1,
+       i:"خالد بن الوليد رضي الله عنه، لقّبه النبي ﷺ بسيف الله المسلول. (البخاري)"},
+      {q:"ما السورة التي تُلقب بـ«قلب القرآن»؟", o:["الرحمن","يس","الكهف","الملك"], c:1,
+       i:"سورة يس، ورد في فضلها حديث عن أنس رضي الله عنه، وهي قلب القرآن عند كثير من المفسرين."},
+      {q:"من هي أول زوجات النبي ﷺ؟", o:["عائشة","خديجة","سودة","حفصة"], c:1,
+       i:"خديجة بنت خويلد رضي الله عنها، أول من آمن به ﷺ. (البخاري)"},
+      {q:"في أي غار نزل الوحي على النبي ﷺ أول مرة؟", o:["غار ثور","غار حراء","غار الكهف","غار عرفة"], c:1,
+       i:"غار حراء بجبل النور بمكة، وفيه نزل: «اقْرَأْ بِاسْمِ رَبِّكَ». (البخاري)"},
+      {q:"من هو أول مؤذن في الإسلام؟", o:["عبد الله بن مسعود","بلال بن رباح","سلمان الفارسي","صهيب الرومي"], c:1,
+       i:"بلال بن رباح رضي الله عنه، اختاره النبي ﷺ لندى صوته."},
+      {q:"ما السورة التي لا تبدأ بالبسملة؟", o:["الأنفال","التوبة","يونس","هود"], c:1,
+       i:"سورة التوبة هي الوحيدة التي لم تُفتتح بالبسملة."},
+      {q:"كم عدد الخلفاء الراشدين؟", o:["ثلاثة","أربعة","خمسة","ستة"], c:1,
+       i:"أبو بكر، وعمر، وعثمان، وعلي رضي الله عنهم."},
+      {q:"كم سنة استمرت الدعوة في مكة قبل الهجرة؟", o:["١٠","١٣","١٥","٢٠"], c:1,
+       i:"ثلاث عشرة سنة، ثم هاجر النبي ﷺ إلى المدينة."},
+      {q:"كم عدد الأنبياء المذكورين بأسمائهم في القرآن؟", o:["٢٠","٢٥","٣٠","٤٠"], c:1,
+       i:"خمسة وعشرون نبيًّا ذُكروا بأسمائهم صراحةً في القرآن."},
+      {q:"ما اسم أم النبي ﷺ؟", o:["حليمة","آمنة","فاطمة","خديجة"], c:1,
+       i:"آمنة بنت وهب، وحليمة السعدية مرضعته ﷺ."}
+    ]
+  },
+  {
+    id:3, name:"المستوى الثالث", title:"زاد العالم", icon:"🎓", color:"#a78bfa", time:26,
+    desc:"علوم القرآن والتفاسير وأخبار الأمم",
+    qs:[
+      {q:"من الصحابي الذي اهتز لموته عرش الرحمن؟", o:["سعد بن معاذ","سعد بن عبادة","أنس بن مالك","معاذ بن جبل"], c:0,
+       i:"سعد بن معاذ رضي الله عنه، قال النبي ﷺ: «اهتز عرش الرحمن لموت سعد بن معاذ». (البخاري)"},
+      {q:"من هي المرأة الوحيدة التي ذُكر اسمها صريحًا في القرآن؟", o:["آسية","مريم","خديجة","سارة"], c:1,
+       i:"مريم بنت عمران، وسُمّيت بها سورة كاملة. قال تعالى: «وَمَرْيَمَ ابْنَتَ عِمْرَانَ»."},
+      {q:"ما أول مسجد بُني في الإسلام؟", o:["المسجد النبوي","مسجد قباء","المسجد الحرام","المسجد الأقصى"], c:1,
+       i:"مسجد قباء، بناه النبي ﷺ عند وصوله المدينة مهاجرًا."},
+      {q:"كم سنة دعا نوح عليه السلام قومه؟", o:["٥٠٠","٧٠٠","٩٥٠","١٠٠٠"], c:2,
+       i:"قال تعالى: «فَلَبِثَ فِيهِمْ أَلْفَ سَنَةٍ إِلَّا خَمْسِينَ عَامًا» — العنكبوت ١٤."},
+      {q:"من هو النبي الملقب بـ«كليم الله»؟", o:["إبراهيم","موسى","عيسى","هارون"], c:1,
+       i:"موسى عليه السلام، قال تعالى: «وَكَلَّمَ اللَّهُ مُوسَى تَكْلِيمًا» — النساء ١٦٤."},
+      {q:"ما السورة التي تعدل ثلث القرآن؟", o:["الفاتحة","الإخلاص","الكوثر","يس"], c:1,
+       i:"قال النبي ﷺ: «قل هو الله أحد تعدل ثلث القرآن». (البخاري)"},
+      {q:"كم عدد آيات سورة الكهف؟", o:["٩٩","١١٠","١٢٠","١٣٥"], c:1,
+       i:"مئة وعشر آيات."},
+      {q:"من هو النبي الذي سُخّرت له الجن والريح؟", o:["داود","سليمان","أيوب","يوسف"], c:1,
+       i:"سليمان عليه السلام، قال تعالى: «وَلِسُلَيْمَانَ الرِّيحَ عَاصِفَةً» — الأنبياء ٨١."},
+      {q:"من الصحابي الملقب بـ«أمين هذه الأمة»؟", o:["أبو بكر","أبو عبيدة بن الجراح","الزبير بن العوام","طلحة بن عبيد الله"], c:1,
+       i:"قال النبي ﷺ: «أبو عبيدة أمين هذه الأمة». (البخاري)"},
+      {q:"كم عدد أبواب الجنة؟", o:["سبعة","ثمانية","تسعة","عشرة"], c:1,
+       i:"قال ﷺ: «للجنة ثمانية أبواب». (البخاري)"}
+    ]
+  },
+  {
+    id:4, name:"المستوى الرابع", title:"زاد الخبير", icon:"💎", color:"#f59e0b", time:24,
+    desc:"دقائق علوم الحديث والأرقام القرآنية",
+    qs:[
+      {q:"من أكثر الصحابة روايةً لحديث النبي ﷺ؟", o:["أنس بن مالك","أبو هريرة","عبد الله بن عمر","عائشة"], c:1,
+       i:"أبو هريرة رضي الله عنه، روى نحو ٥٣٧٤ حديثًا."},
+      {q:"كم مرة ذُكر اسم النبي محمد ﷺ صريحًا في القرآن؟", o:["مرة","مرتين","أربع مرات","سبع مرات"], c:2,
+       i:"أربع مرات: آل عمران ١٤٤، الأحزاب ٤٠، محمد ٢، الصف ٦."},
+      {q:"ما آخر سورة نزلت كاملةً من القرآن؟", o:["النصر","الفاتحة","الناس","الكوثر"], c:0,
+       i:"سورة النصر، قال ابن عباس: «آخر سورة نزلت كاملة سورة النصر». (مسلم)"},
+      {q:"ما اسم الملك الموكل بالوحي؟", o:["ميكائيل","إسرافيل","جبريل","مالك"], c:2,
+       i:"جبريل عليه السلام، قال تعالى: «نَزَلَ بِهِ الرُّوحُ الْأَمِينُ» — الشعراء ١٩٣."},
+      {q:"كم عدد أبواب جهنم؟", o:["خمسة","ستة","سبعة","ثمانية"], c:2,
+       i:"قال تعالى: «لَهَا سَبْعَةُ أَبْوَابٍ» — الحجر ٤٤."},
+      {q:"من الصحابي الذي وُكّل إليه جمع القرآن في عهد أبي بكر؟", o:["عثمان بن عفان","زيد بن ثابت","علي بن أبي طالب","أُبي بن كعب"], c:1,
+       i:"زيد بن ثابت رضي الله عنه، بأمر أبي بكر ومشورة عمر. (البخاري)"},
+      {q:"ما السورة التي تُسمى «تبارك»؟", o:["الملك","القلم","الحاقة","نوح"], c:0,
+       i:"سورة الملك، تبدأ بـ«تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ»."},
+      {q:"من هو أول من أسلم من الرجال؟", o:["علي بن أبي طالب","أبو بكر الصديق","عمر بن الخطاب","زيد بن حارثة"], c:1,
+       i:"أبو بكر الصديق رضي الله عنه أول من أسلم من الرجال الأحرار."},
+      {q:"كم عدد سجدات التلاوة في القرآن الكريم؟", o:["١١","١٣","١٥","١٧"], c:2,
+       i:"خمس عشرة سجدة في مواضعها المعروفة عند جمهور الفقهاء."},
+      {q:"في أي سنة هجرية فُرض صيام رمضان؟", o:["الأولى","الثانية","الثالثة","الرابعة"], c:1,
+       i:"فُرض في السنة الثانية للهجرة."}
+    ]
+  },
+  {
+    id:5, name:"المستوى الخامس", title:"زاد الأسطورة", icon:"👑", color:"#ef4444", time:22,
+    desc:"للمتخصصين… أسئلة الحسم والتحدي",
+    qs:[
+      {q:"كم كان عمر النبي ﷺ عند وفاته؟", o:["٦٠","٦٣","٦٥","٦٨"], c:1,
+       i:"ثلاث وستون سنة، كما في حديث ابن عباس في البخاري."},
+      {q:"من هي أول شهيدة في الإسلام؟", o:["سمية بنت خياط","أم أيمن","سودة بنت زمعة","رقية بنت النبي"], c:0,
+       i:"سمية بنت خياط أم عمار بن ياسر رضي الله عنها، قتلها أبو جهل."},
+      {q:"من الصحابي الملقب بـ«حبر الأمة»؟", o:["عبد الله بن عباس","عبد الله بن عمر","ابن مسعود","معاذ بن جبل"], c:0,
+       i:"عبد الله بن عباس رضي الله عنهما، دعا له النبي ﷺ: «اللهم فقهه في الدين»."},
+      {q:"كم سنة استمر نزول القرآن الكريم؟", o:["١٣","٢٠","٢٣","٢٥"], c:2,
+       i:"ثلاث وعشرون سنة: ثلاث عشرة بمكة وعشر بالمدينة."},
+      {q:"من النبي الذي كان يُحيي الموتى بإذن الله؟", o:["عيسى","موسى","إبراهيم","داود"], c:0,
+       i:"قال تعالى: «وَتُحْيِي الْمَوْتَى بِإِذْنِي» — المائدة ١١٠، وهو عيسى عليه السلام."},
+      {q:"من أول من وضع التاريخ الهجري؟", o:["عمر بن الخطاب","أبو بكر الصديق","عثمان بن عفان","علي بن أبي طالب"], c:0,
+       i:"عمر بن الخطاب رضي الله عنه، وجعل بدايته من هجرة النبي ﷺ."},
+      {q:"من أم المؤمنين التي روت أكثر الأحاديث بعد أبي هريرة؟", o:["حفصة","عائشة","أم سلمة","ميمونة"], c:1,
+       i:"عائشة رضي الله عنها، روت نحو ٢٢١٠ أحاديث."},
+      {q:"كم عدد الغزوات التي خرج فيها النبي ﷺ بنفسه؟", o:["١٥","١٩","٢٧","٣٥"], c:2,
+       i:"سبع وعشرون غزوة على المشهور عند أهل السير."},
+      {q:"من الصحابي الذي قال له النبي ﷺ «ارمِ سعد فداك أبي وأمي»؟", o:["سعد بن أبي وقاص","أبو بكر","الزبير","طلحة"], c:0,
+       i:"سعد بن أبي وقاص رضي الله عنه، في غزوة أُحد. (البخاري)"},
+      {q:"ما السورة التي بدأت بـ«قد أفلح» ولم تُفتتح ببسملة ظاهرة في العدّ؟", o:["المؤمنون","النور","الفرقان","النمل"], c:0,
+       i:"سورة المؤمنون تبدأ بـ«قَدْ أَفْلَحَ الْمُؤْمِنُونَ»، وهي من السور المكية العظيمة."}
+    ]
+  }
+];
+
+const AR_NUM = ["٠","١","٢","٣","٤","٥","٦","٧","٨","٩"];
+const toAr = n => String(n).replace(/\d/g, d => AR_NUM[+d]);
+
+/* ---------- الحالة ---------- */
+const LS = {
+  get(k, d){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
+  set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+
+let state = {
+  player: LS.get('zq_player', ''),
+  progress: LS.get('zq_progress', {}),      // {levelId:{best:%, pts:number, done:true}}
+  scores: LS.get('zq_scores', []),          // leaderboard
+  settings: LS.get('zq_settings', {sound:true})
+};
+
+let quiz = null;
+
+/* ---------- أدوات ---------- */
+function toast(msg){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+function go(id){
+  $$('.screen').forEach(s=>s.classList.remove('active'));
+  $('#screen-'+id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---------- الصوت ---------- */
+let actx = null;
+function beep(freq, dur, type='sine', vol=0.07, delay=0){
+  if(!state.settings.sound) return;
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = actx.currentTime + delay;
+    const o = actx.createOscillator(), g = actx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(vol, t0);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(actx.destination);
+    o.start(t0); o.stop(t0 + dur + .02);
+  }catch(e){}
+}
+const sndOk   = ()=>{ beep(660,.12,'sine',.08,0); beep(880,.16,'sine',.08,.1); beep(1180,.22,'sine',.07,.22); };
+const sndBad  = ()=>{ beep(200,.22,'sawtooth',.06,0); beep(150,.3,'sawtooth',.05,.14); };
+const sndTick = ()=>{ beep(1000,.04,'square',.03,0); };
+const sndClick= ()=>{ beep(520,.06,'triangle',.05,0); };
+const sndWin  = ()=>{ [523,659,784,1047,1319].forEach((f,i)=>beep(f,.3,'sine',.075,i*.11)); };
+
+/* ---------- الكونفيتي ---------- */
+const cv = $('#fx'), cx = cv.getContext('2d');
+let parts = [], rafId = null;
+function resize(){ cv.width = innerWidth; cv.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+
+function confetti(count=140){
+  const colors = ['#d4af37','#f7e7a3','#0d5c46','#22c55e','#38bdf8','#ffffff','#a8842a'];
+  for(let i=0;i<count;i++){
+    parts.push({
+      x: Math.random()*cv.width,
+      y: -20 - Math.random()*cv.height*.4,
+      w: 6 + Math.random()*8,
+      h: 8 + Math.random()*10,
+      vx: (Math.random()-.5)*3,
+      vy: 2 + Math.random()*4.5,
+      rot: Math.random()*Math.PI*2,
+      vr: (Math.random()-.5)*.28,
+      c: colors[(Math.random()*colors.length)|0],
+      life: 1
+    });
+  }
+  if(!rafId) loopFx();
+}
+function loopFx(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  parts = parts.filter(p=>p.life>0 && p.y < cv.height+60);
+  parts.forEach(p=>{
+    p.x += p.vx; p.y += p.vy; p.vy += 0.055; p.rot += p.vr;
+    p.life -= 0.0022;
+    cx.save();
+    cx.translate(p.x, p.y);
+    cx.rotate(p.rot);
+    cx.globalAlpha = Math.max(0, p.life);
+    cx.fillStyle = p.c;
+    cx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+    cx.restore();
+  });
+  if(parts.length) rafId = requestAnimationFrame(loopFx);
+  else { rafId = null; cx.clearRect(0,0,cv.width,cv.height); }
+}
+
+/* ---------- إحصاءات الرئيسية ---------- */
+function updateHome(){
+  let total = 0, doneCount = 0, best = 0;
+  LEVELS.forEach(l=>{
+    const p = state.progress[l.id];
+    if(p){ total += (p.pts||0); if(p.done) doneCount++; best = Math.max(best, p.best||0); }
+  });
+  $('#stTotal').textContent = toAr(total);
+  $('#stLevels').textContent = toAr(doneCount) + '/٥';
+  $('#stBest').textContent = toAr(best) + '%';
+  $('#stRank').textContent = rankTitle(best);
+}
+function rankTitle(p){
+  if(p >= 95) return 'أسطورة';
+  if(p >= 85) return 'خبير';
+  if(p >= 70) return 'متقدم';
+  if(p >= 50) return 'مجتهد';
+  if(p > 0)   return 'مبتدئ';
+  return '—';
+}
+
+/* ---------- كروت المستويات ---------- */
+function renderLevels(){
+  const g = $('#levelsGrid');
+  g.innerHTML = '';
+  LEVELS.forEach((l, idx)=>{
+    const p = state.progress[l.id] || {best:0, pts:0, done:false};
+    const prev = idx === 0 ? true : ((state.progress[LEVELS[idx-1].id]||{}).best || 0) >= 60;
+    const locked = !prev;
+
+    const el = document.createElement('div');
+    el.className = 'lvl' + (locked ? ' locked' : '');
+    el.style.setProperty('--acc', l.color);
+    el.innerHTML = `
+      ${locked ? '<div class="lock-tag">🔒 مقفل</div>' : (p.done ? '<div class="done-tag">✓ مكتمل</div>' : '')}
+      <div class="ico">${locked ? '🔒' : l.icon}</div>
+      <h3>${l.name} — ${l.title}</h3>
+      <div class="dsc">${l.desc}</div>
+      <div class="meta">
+        <span>📋 ${toAr(l.qs.length)} أسئلة</span>
+        <span>⏱ ${toAr(l.time)} ثانية</span>
+        <span style="margin-inline-start:auto;color:${l.color}">${toAr(p.best||0)}%</span>
+      </div>
+      <div class="bar"><i style="width:${p.best||0}%;background:linear-gradient(90deg,${l.color},#d4af37)"></i></div>
+    `;
+    if(!locked) el.onclick = ()=>{ sndClick(); startQuiz(l.id); };
+    else el.onclick = ()=> toast('🔒 أكمل ٦٠٪ من المستوى السابق أولًا');
+    g.appendChild(el);
+  });
+}
+
+/* ---------- بدء المسابقة ---------- */
+function startQuiz(levelId){
+  const lvl = LEVELS.find(l=>l.id === levelId);
+  if(!lvl) return;
+  quiz = {
+    lvl,
+    idx: 0,
+    score: 0,
+    correct: 0,
+    wrong: 0,
+    answered: false,
+    order: lvl.qs.map((_,i)=>i).sort(()=>Math.random()-.5),
+    t: 0,
+    timer: null,
+    totalTime: 0
+  };
+  $('#qLevel').textContent = lvl.icon + ' ' + lvl.title;
+  go('quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const lvl = quiz.lvl;
+  const q = lvl.qs[quiz.order[quiz.idx]];
+  quiz.answered = false;
+
+  $('#qCounter').textContent = 'سؤال ' + toAr(quiz.idx+1) + ' / ' + toAr(lvl.qs.length);
+  $('#qScore').textContent = toAr(quiz.score) + ' نقطة';
+  $('#qNum').textContent = 'السؤال ' + toAr(quiz.idx+1);
+  $('#qText').textContent = q.q;
+
+  const box = $('#opts');
+  box.innerHTML = '';
+  q.o.forEach((txt, i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<span class="key">${['أ','ب','ج','د'][i]}</span><span>${txt}</span>`;
+    b.onclick = ()=> answer(i, b);
+    box.appendChild(b);
+  });
+
+  const fb = $('#feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+  $('#nextBtn').style.display = 'none';
+
+  startTimer(lvl.time);
+}
+
+function startTimer(sec){
+  clearInterval(quiz.timer);
+  quiz.t = sec;
+  const bar = $('#timerBar');
+  bar.className = 'timer-bar';
+  bar.style.width = '100%';
+  $('#qTimer').textContent = '⏱ ' + toAr(sec);
+
+  quiz.timer = setInterval(()=>{
+    quiz.t -= 1;
+    const pct = Math.max(0, (quiz.t / sec) * 100);
+    bar.style.width = pct + '%';
+    $('#qTimer').textContent = '⏱ ' + toAr(Math.max(0, quiz.t));
+    if(quiz.t <= 5 && quiz.t > 0){ bar.classList.add('danger'); sndTick(); }
+    else if(quiz.t <= Math.ceil(sec*0.4)) bar.classList.add('warn');
+    if(quiz.t <= 0){ clearInterval(quiz.timer); timeUp(); }
+  }, 1000);
+}
+
+function timeUp(){
+  if(quiz.answered) return;
+  const lvl = quiz.lvl;
+  const q = lvl.qs[quiz.order[quiz.idx]];
+  quiz.answered = true;
+  quiz.wrong++;
+  sndBad();
+
+  const opts = $$('#opts .opt');
+  opts.forEach((o,i)=>{
+    o.classList.add('dis');
+    if(i === q.c) o.classList.add('correct');
+  });
+  showFeedback(false, q, true);
+}
+
+function answer(pick, btn){
+  if(quiz.answered) return;
+  quiz.answered = true;
+  clearInterval(quiz.timer);
+
+  const lvl = quiz.lvl;
+  const q = lvl.qs[quiz.order[quiz.idx]];
+  const opts = $$('#opts .opt');
+  opts.forEach(o=>o.classList.add('dis'));
+
+  if(pick === q.c){
+    btn.classList.add('correct');
+    quiz.correct++;
+    const bonus = Math.max(0, quiz.t) * 2;
+    quiz.score += 100 + bonus;
+    sndOk();
+    confetti(45);
+  } else {
+    btn.classList.add('wrong');
+    opts[q.c].classList.add('correct');
+    quiz.wrong++;
+    sndBad();
+  }
+
+  $('#qScore').textContent = toAr(quiz.score) + ' نقطة';
+  showFeedback(pick === q.c, q, false);
+}
+
+function showFeedback(ok, q, timeout){
+  const fb = $('#feedback');
+  fb.className = 'feedback show ' + (ok ? 'good' : 'bad');
+  const head = ok
+    ? '✅ إجابة صحيحة! أحسنت.'
+    : (timeout ? '⏰ انتهى الوقت!' : '❌ إجابة خاطئة.');
+  fb.innerHTML = `<b>${head}</b><br>الإجابة الصحيحة: <b>${q.o[q.c]}</b><br>📚 ${q.i}`;
+  $('#nextBtn').style.display = 'inline-flex';
+  $('#nextBtn').textContent = (quiz.idx === quiz.lvl.qs.length - 1) ? 'عرض النتيجة 🎯' : 'السؤال التالي ←';
+}
+
+$('#nextBtn').onclick = ()=>{
+  sndClick();
+  quiz.idx++;
+  if(quiz.idx >= quiz.lvl.qs.length) finishQuiz();
+  else renderQuestion();
+};
+
+/* ---------- إنهاء المسابقة ---------- */
+function finishQuiz(){
+  clearInterval(quiz.timer);
+  const lvl = quiz.lvl;
+  const total = lvl.qs.length;
+  const pct = Math.round((quiz.correct / total) * 100);
+
+  const prevP = state.progress[lvl.id] || {best:0, pts:0, done:false};
+  state.progress[lvl.id] = {
+    best: Math.max(prevP.best || 0, pct),
+    pts: Math.max(prevP.pts || 0, quiz.score),
+    done: (prevP.done || pct >= 60)
+  };
+  LS.set('zq_progress', state.progress);
+
+  // لوحة الصدارة
+  state.scores.push({
+    name: state.player || 'مشارك',
+    level: lvl.title,
+    pct, pts: quiz.score,
+    date: new Date().toLocaleDateString('ar-EG')
+  });
+  state.scores.sort((a,b)=> b.pct - a.pct || b.pts - a.pts);
+  state.scores = state.scores.slice(0, 50);
+  LS.set('zq_scores', state.scores);
+
+  showResult(pct);
+  updateHome();
+  renderLevels();
+}
+
+function showResult(pct){
+  go('result');
+  const ok = quiz.correct, bad = quiz.wrong;
+  let title, grade, medal, stars;
+
+  if(pct >= 95){ title='ما شاء الله! أسطورة'; grade='تقدير: ممتاز مرتفع 🏆'; medal='👑'; stars='★★★'; }
+  else if(pct >= 85){ title='ما شاء الله! خبير'; grade='تقدير: ممتاز 🌟'; medal='🥇'; stars='★★★'; }
+  else if(pct >= 70){ title='أحسنت! متقدم'; grade='تقدير: جيد جدًا ✨'; medal='🥈'; stars='★★☆'; }
+  else if(pct >= 50){ title='جيد! واصل التقدم'; grade='تقدير: جيد 👍'; medal='🥉'; stars='★☆☆'; }
+  else { title='لا بأس، حاول مجددًا'; grade='تقدير: يحتاج مراجعة 📖'; medal='📘'; stars='☆☆☆'; }
+
+  $('#medal').textContent = medal;
+  $('#resTitle').textContent = title;
+  $('#resGrade').textContent = grade;
+  $('#resStars').textContent = stars;
+  $('#resCorrect').textContent = toAr(ok);
+  $('#resWrong').textContent = toAr(bad);
+  $('#resPts').textContent = toAr(quiz.score);
+  $('#resTime').textContent = toAr(quiz.lvl.time) + 'ث';
+
+  // الحلقة
+  const ring = $('#ringFg');
+  const C = 2 * Math.PI * 60;
+  ring.style.strokeDasharray = C;
+  ring.style.strokeDashoffset = C;
+  $('#resPct').textContent = toAr(pct) + '%';
+  setTimeout(()=>{ ring.style.strokeDashoffset = C - (C * pct / 100); }, 120);
+
+  // الشهادة
+  $('#certArea').style.display = 'none';
+
+  // زر المستوى التالي
+  const nextLvl = LEVELS.find(l => l.id === quiz.lvl.id + 1);
+  const nb = $('#nextLvlBtn');
+  if(nextLvl && pct >= 60){
+    nb.style.display = 'inline-flex';
+    nb.textContent = 'المستوى التالي: ' + nextLvl.title + ' ←';
+    nb.onclick = ()=>{ sndClick(); startQuiz(nextLvl.id); };
+  } else {
+    nb.style.display = 'none';
+  }
+
+  if(pct >= 60){ setTimeout(()=>{ sndWin(); confetti(180); }, 500); }
+  else { setTimeout(()=>confetti(60), 400); }
+}
+
+/* ---------- الشهادة ---------- */
+$('#certBtn').onclick = ()=>{
+  const lvl = quiz ? quiz.lvl : LEVELS[0];
+  const p = state.progress[lvl.id] || {best:0, pts:0};
+  $('#certName').textContent = state.player || 'مشارك';
+  $('#certLevel').textContent = lvl.name + ' — ' + lvl.title;
+  $('#certPct').textContent = toAr(p.best || 0) + '%';
+  $('#certGrade').textContent = rankTitle(p.best || 0);
+  $('#certDate').textContent = new Date().toLocaleDateString('ar-EG');
+  $('#certArea').style.display = 'block';
+  confetti(90);
+  setTimeout(()=> $('#certArea').scrollIntoView({behavior:'smooth'}), 200);
+};
+
+$('#printCert').onclick = ()=>{ window.print(); };
+$('#shareCert').onclick = async ()=>{
+  const txt = `🏆 حصلت على شهادة إتمام "${$('#certLevel').textContent}" بنسبة ${$('#certPct').textContent} في مسابقات زاد القلوب — إشراف أحمد جعفر ☪️`;
+  try{
+    if(navigator.share){ await navigator.share({title:'زاد القلوب', text: txt}); }
+    else { await navigator.clipboard.writeText(txt); toast('✅ تم نسخ النص للمشاركة'); }
+  }catch(e){ toast('تعذّرت المشاركة'); }
+};
+
+/* ---------- لوحة الصدارة ---------- */
+function renderBoard(){
+  const list = $('#boardList');
+  const s = state.scores;
+  if(!s.length){
+    list.innerHTML = '<div class="empty">لا توجد نتائج بعد 🌱<br>ابدأ أول مستوى وسجّل اسمك في الصدارة!</div>';
+    return;
+  }
+  list.innerHTML = s.slice(0,20).map((r,i)=>`
+    <div class="b-row ${i<3?'g'+(i+1):''}" style="animation-delay:${i*.045}s">
+      <div class="rank">${i<3 ? ['🥇','🥈','🥉'][i] : toAr(i+1)}</div>
+      <div class="nm">${r.name}<div class="dt">${r.level} · ${r.date}</div></div>
+      <div class="sc">${toAr(r.pct)}%</div>
+    </div>
+  `).join('');
+}
+
+/* ---------- التنقل ---------- */
+$('#boardBtn').onclick = ()=>{ sndClick(); renderBoard(); go('board'); };
+$('#toBoard').onclick = ()=>{ sndClick(); renderBoard(); go('board'); };
+$('#boardHome').onclick = ()=>{ sndClick(); go('home'); };
+$('#homeBtn').onclick = ()=>{ sndClick(); if(quiz) clearInterval(quiz.timer); go('home'); };
+$('#resHome').onclick = ()=>{ sndClick(); go('home'); };
+$('#quitBtn').onclick = ()=>{
+  if(confirm('هل تريد الخروج من المسابقة؟ سيتم فقدان تقدمك في هذا المستوى.')){
+    clearInterval(quiz.timer); go('home');
+  }
+};
+$('#retryBtn').onclick = ()=>{ sndClick(); startQuiz(quiz.lvl.id); };
+
+$('#clearBoard').onclick = ()=>{
+  if(confirm('سيتم مسح كل نتائج لوحة الصدارة. متأكد؟')){
+    state.scores = []; LS.set('zq_scores', []); renderBoard(); toast('🗑️ تم مسح اللوحة');
+  }
+};
+
+$('#resetBtn').onclick = ()=>{
+  if(confirm('سيتم تصفير كل تقدمك ومستوياتك. متأكد؟')){
+    state.progress = {}; state.scores = []; state.player = '';
+    LS.set('zq_progress', {}); LS.set('zq_scores', []); LS.set('zq_player', '');
+    updateHome(); renderLevels(); toast('♻️ تم التصفير');
+  }
+};
+
+/* ---------- تحميل الإنجازات ---------- */
+$('#dlData').onclick = ()=>{
+  let total = 0, done = 0;
+  let lines = ['═══════════════════════════════════',
+               '   زاد القلوب — تقرير الإنجازات',
+               '   إشراف: أحمد جعفر',
+               '═══════════════════════════════════',
+               'الاسم: ' + (state.player || 'مشارك'),
+               'التاريخ: ' + new Date().toLocaleString('ar-EG'),
+               '',
+               '── نتائج المستويات ──'];
+  LEVELS.forEach(l=>{
+    const p = state.progress[l.id] || {best:0, pts:0, done:false};
+    total += p.pts || 0;
+    if(p.done) done++;
+    lines.push(`${l.name} — ${l.title}: ${p.best||0}% | ${p.pts||0} نقطة | ${p.done?'مكتمل ✓':'غير مكتمل'}`);
+  });
+  lines.push('');
+  lines.push('── الإجمالي ──');
+  lines.push('مجموع النقاط: ' + total);
+  lines.push('المستويات المكتملة: ' + done + '/5');
+  lines.push('التقدير العام: ' + rankTitle(Math.max(...LEVELS.map(l=>(state.progress[l.id]||{}).best||0), 0)));
+  lines.push('');
+  lines.push('«وَقُل رَّبِّ زِدْنِي عِلْمًا»');
+
+  const blob = new Blob(['\ufeff' + lines.join('\n')], {type:'text/plain;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'زاد-القلوب-إنجازاتي.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('⬇️ تم تحميل التقرير');
+};
+
+/* ---------- الصوت ---------- */
+function updateSoundBtn(){
+  const b = $('#soundBtn');
+  b.textContent = state.settings.sound ? '🔊' : '🔇';
+  b.classList.toggle('off', !state.settings.sound);
+}
+$('#soundBtn').onclick = ()=>{
+  state.settings.sound = !state.settings.sound;
+  LS.set('zq_settings', state.settings);
+  updateSoundBtn();
+  if(state.settings.sound){ sndOk(); toast('🔊 الصوت مفعّل'); }
+  else toast('🔇 الصوت مكتوم');
+};
+
+/* ---------- نافذة الاسم ---------- */
+function askName(cb){
+  const m = $('#nameModal');
+  m.classList.add('show');
+  const inp = $('#nameInput');
+  inp.value = state.player || '';
+  setTimeout(()=>inp.focus(), 250);
+
+  const done = ()=>{
+    const v = inp.value.trim();
+    if(v.length < 2){ inp.style.borderColor = '#ef4444'; inp.focus(); return; }
+    state.player = v;
+    LS.set('zq_player', v);
+    m.classList.remove('show');
+    sndOk();
+    cb && cb();
+  };
+  $('#nameOk').onclick = done;
+  inp.onkeydown = e => { if(e.key === 'Enter') done(); };
+  inp.oninput = ()=>{ inp.style.borderColor = 'rgba(212,175,55,.3)'; };
+}
+
+/* ---------- اختصارات لوحة المفاتيح ---------- */
+document.addEventListener('keydown', e=>{
+  if(!$('#screen-quiz').classList.contains('active')) return;
+  if(quiz && quiz.answered && (e.key === 'Enter' || e.key === 'ArrowLeft')) $('#nextBtn').click();
+  const map = {'1':0,'2':1,'3':2,'4':3};
+  if(map[e.key] !== undefined && quiz && !quiz.answered){
+    const btns = $$('#opts .opt');
+    if(btns[map[e.key]]) btns[map[e.key]].click();
+  }
+});
+
+/* ---------- الإقلاع ---------- */
+(function init(){
+  updateSoundBtn();
+  updateHome();
+  renderLevels();
+  renderBoard();
+
+  if(!state.player){
+    setTimeout(()=> askName(()=> toast('أهلًا بك في زاد القلوب 🌿')), 700);
+  } else {
+    setTimeout(()=> toast('أهلًا بعودتك يا ' + state.player + ' 🌿'), 800);
+  }
+})();
+</script>
+</body>
+</html>
